@@ -1,31 +1,49 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
-const BASE_URL = 'https://random-word-api.herokuapp.com/word?number=3';
+let mountCount = 1
+
+const BASE_URL = 'https://random-word-api.herokuapp.com/word';
 export default function SelectWord() {
+  const [didMount, setDidMount] = useState(false)
   const [words, setWords] = useState<string[]>();
 
 
   const getRandomWords = async (number: number) => {
-    // const randomWords: string[] = await axios.get(`${BASE_URL}?number=${number}`);
-    const randomWords = ['apple', 'banana', 'mango'];
-    if (randomWords) {
-      setWords(randomWords);
+    try {
+      const response: AxiosResponse = await axios.get(`${BASE_URL}?number=${number}`);
+      const randomWords = response.data;
+      if (randomWords) {
+        setWords(randomWords);
+      }
+    } catch (error) {
+      console.log('[SelectWord/getRandomWords] get words failed. error=', error)
     }
   };
 
   useEffect(() => {
-    getRandomWords(3);
+    mountCount++;
+    setDidMount(true)
+
+    return () => {
+
+    }
   }, []);
+
+  useEffect(() => {
+    if (didMount) {
+      getRandomWords(3);
+    }
+  }, [didMount]);
 
   return (
     <>
       <ul>
-        {words?.map((word: string) => {
+        {words?.map((word: string, index: number) => {
           return (
             <li key={word}>
-              <Link to="/guess" state={{ currentWord: word }}>{word}</Link>
+              <Link to="/guess" state={{ currentWord: word }}>{index}</Link>
             </li>
           );
         })}
