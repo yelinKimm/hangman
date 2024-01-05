@@ -1,59 +1,65 @@
-import { Card, List, ListItemButton, ListItemText } from '@mui/material';
 import axios, { AxiosResponse } from 'axios';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-import type * as CSS from 'csstype';
+const Wrapper = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+`;
+const TitleWrapper = styled.div`
+  padding-bottom: 30px;
+`;
+const Title = styled.h2`
+  padding-bottom: 10px;
+  font-size: 35px;
+`;
+const SubTitle = styled.div``;
+
+const WordList = styled.ul`
+  display: grid;
+  gap: 20px;
+`;
+const WordItem = styled.li`
+  padding: 20px 24px;
+  font-weight: bold;
+  font-size: 20px;
+  outline: 3px solid #F7F6E8;
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
+
+  &.odd {
+    background-color: #8A795D;
+    > a {
+      color: #fff;
+    }
+  }
+
+  &.even {
+    outline: 3px solid #8A795D;
+  }
+
+  > a {
+    color: #000;
+    text-decoration: none;
+  }
+`;
+
+// ----------------------------- //
 
 let mountCount = 1
 
 const BASE_URL = 'https://random-word-api.herokuapp.com/word';
+
 export default function SelectWord() {
   const [didMount, setDidMount] = useState(false)
-  const [words, setWords] = useState<string[]>();
-
-  const containerStyle: CSS.Properties = {
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-  }
-
-  const style = {
-    '&.MuiList-root': {
-     
-
-      '.word': {
-        textDecoration: 'none'
-      }
-    }
-  }
-
-  const linkStyle = {
-    textDecoration: 'none'
-  }
-
-  const listItemStyle = {
-    '&.MuiListItemButton-root': {
-      padding: '16px 24px',
-      // backgroundColor: 'gold',
-      borderRadius: '10px',
-      marginBottom: '16px',
-      fontSize: '20px',
-      fontWeight: 'bold',
-
-      '&.odd': {
-        backgroundColor: '#E3ECFF',
-        color: '#508EF6'
-        
-      },
-      '&.even': {
-        backgroundColor: '#F3E9FF',
-        color: '#A97BFF'
-      }
-    }
-  } 
-
+  const [words, setWords] = useState<string[]>([]);
 
   const getRandomWords = async (number: number) => {
     try {
@@ -80,24 +86,27 @@ export default function SelectWord() {
   }, [didMount]);
 
   return (
-    <div className='select-word-container' style={containerStyle}>
-      <div>
-        <h3>Hangman Challenge</h3>
-        <span>Pick a word!</span>
-      </div>
+    <Wrapper className='select-word-container'>
+      <TitleWrapper>
+        <Title>Hangman Challenge</Title>
+        <SubTitle>Pick a word!</SubTitle>
+      </TitleWrapper>
 
-      <List sx={style}>
+      <WordList>
         {words?.map((word: string, index: number) => {
           return (
-            <Link key={word} to="/guess" state={{ currentWord: word }} className='word'>
-              <ListItemButton sx={listItemStyle} className={index % 2 === 0 ? 'even' : 'odd'}>
-                {/* {index + 1} */}
-                {word}
-              </ListItemButton>
-            </Link>
+            <WordItem className={index % 2 === 0 ? 'even' : 'odd'}>
+              <Link 
+                key={word} 
+                to="/guess" 
+                state={{ currentWord: word }} 
+                className='word'>
+                  {word}
+              </Link>
+            </WordItem>
           );
         })}
-      </List>
-    </div>
+      </WordList>
+    </Wrapper>
   )
 }
