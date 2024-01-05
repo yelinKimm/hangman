@@ -2,6 +2,83 @@ import React, { useEffect, useState } from 'react'
 import {v4 as uuidv4} from 'uuid';
 import _ from 'lodash';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+	max-width: 500px;
+	margin: 50px auto;
+`;
+
+const GameView = styled.div`
+	display: grid;
+	grid-template-columns: 1fr 3fr;
+	gap: 40px;
+`;
+const GameCounts = styled.div`
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 10px;
+`;
+const Count = styled.span`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid;
+	border-radius: 10px;
+`;
+const Hangman = styled.div`
+	display: flex;
+	justify-content: center;
+`;
+const HangmanImg = styled.img`
+	width: 100%;
+	
+`;
+const TargetWordsContainer = styled.div`
+	padding: 20px 0;
+	margin: 20px 0;
+	text-align: center;
+	border: 2px dashed rgba(0,0,0,0.2);
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+
+`;
+const Words = styled.p`
+	width: 20px;
+	height: 20px;
+	border-bottom: 2px solid;
+	margin-right: 5px;
+
+	&:last-child {
+		margin-right: 0;
+	}
+`;
+const Alphabets = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+`;
+const Alphabet = styled.button`
+	width: 50px;
+	height: 50px;
+	font-size: 25px;
+	background-color: #fff;
+	border-radius: 10px;
+	margin: 3px;
+	border: none;
+	box-shadow: 0 0 3px rgba(0,0,0,0.12);
+	cursor: pointer;
+
+	&:hover {
+		background-color: #f4eece;
+	}
+
+	&:disabled {
+		background-color: #fff;
+		cursor: not-allowed;
+	}
+`;
 
 type TargetWords = {
 	id: string;
@@ -14,7 +91,7 @@ type Alphabet = {
 	disabled: boolean;
 }
 
-const MAX_COUNT = 8;
+const MAX_COUNT = 10;
 
 const ALPHABETS: string[] = [
 	'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
@@ -56,13 +133,16 @@ export default function GuessWord() {
 			setShowRestartBtn(true);
 			return;
 		} else {
-			setCount(count+1);
-			
+			if (!_.includes(_.map(characters, "character"), target.character)) {
+				setCount(count+1);
+				return;
+			}
+
 			const newCharacters = _.map(characters, (character: TargetWords) => {
 				if (!character.filled) {
 					return {...character, filled: target.character === character.character};
 				} else {
-					return character
+					return character;
 				}
 			});
 	
@@ -98,37 +178,55 @@ export default function GuessWord() {
 	}, []);
 
   return (
-    <>
-			{
-				characters?.map((characterItem: TargetWords) => {
+    <Wrapper>
+			<GameView>
+				<GameCounts>
+					{
+						[...Array(MAX_COUNT)].map(() => {
+							return <Count>
+								<svg data-slot="icon" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+									<path d="M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z"></path>
+								</svg>
+							</Count>
+						})
+					}
+				</GameCounts>
+
+				<Hangman>
+					<HangmanImg src={`/step${count}.JPG`}></HangmanImg>
+				</Hangman>
+			</GameView>
+
+			<TargetWordsContainer>
+				{
+					characters?.map((characterItem: TargetWords) => {
+						return (
+							<Words key={characterItem.id}>
+								{characterItem.filled ? characterItem.character.toUpperCase() : ''}
+							</Words>
+						);
+					})
+				}
+			</TargetWordsContainer>
+
+			<Alphabets>
+				{alphabets?.map((alphabet: Alphabet) => {
 					return (
-						<span key={characterItem.id}>
-							{characterItem.filled ? characterItem.character : 'ㅡ'}
-						</span>
-					);
-				})
-			}
-
-			<hr />
-
-			{alphabets?.map((alphabet: Alphabet) => {
-				return (
-					<button 
-						key={alphabet.character} 
-						onClick={() => onSelectAlphabet(alphabet)}
-						disabled={alphabet.disabled}>
-							{alphabet.character}
-					</button>
-				)
-			})}
-
-			<h3>{count}</h3>
+						<Alphabet 
+							key={alphabet.character} 
+							onClick={() => onSelectAlphabet(alphabet)}
+							disabled={alphabet.disabled}>
+								{alphabet.character.toUpperCase()}
+						</Alphabet>
+					)
+				})}
+			</Alphabets>
 
 			{showRestartBtn && (
 				<button>
  					<NavLink to="/">Restart</NavLink>
 				</button>
 			)}
-		</>
+		</Wrapper>
   )
 }
