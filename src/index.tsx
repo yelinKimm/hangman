@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import GuessWord from './components/GuessWord/GuessWord';
 
+import '@fontsource/roboto/400.css';
+
 const router = createBrowserRouter([
   {
     path: "/",
