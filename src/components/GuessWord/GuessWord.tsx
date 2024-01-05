@@ -25,6 +25,10 @@ const Count = styled.span`
 	justify-content: center;
 	border: 2px solid;
 	border-radius: 10px;
+
+	&.filled {
+		color: tomato;
+	}
 `;
 const Hangman = styled.div`
 	display: flex;
@@ -117,25 +121,22 @@ export default function GuessWord() {
 	}
 
 	const onSelectAlphabet = (target: Alphabet) => {
-		if (alphabets) {
-			const netAlphabets: Alphabet[] = alphabets.map((alphabet: Alphabet) => {
-				if (alphabet.character === target.character) {
-					return { character: target.character, disabled: true};
-				} else {
-					return alphabet;
-				}
-			})
-			setAlphabets(netAlphabets);
-		}
 
-		if (count >= MAX_COUNT) {
-			alert('기회 초과!');
-			setShowRestartBtn(true);
-			return;
-		} else {
+		if (count < MAX_COUNT) {
 			if (!_.includes(_.map(characters, "character"), target.character)) {
 				setCount(count+1);
 				return;
+			}
+
+			if (alphabets) {
+				const netAlphabets: Alphabet[] = alphabets.map((alphabet: Alphabet) => {
+					if (alphabet.character === target.character) {
+						return { character: target.character, disabled: true};
+					} else {
+						return alphabet;
+					}
+				})
+				setAlphabets(netAlphabets);
 			}
 
 			const newCharacters = _.map(characters, (character: TargetWords) => {
@@ -177,19 +178,25 @@ export default function GuessWord() {
 		}
 	}, []);
 
+	useEffect(() => {
+		if (count >= MAX_COUNT) {
+			alert('기회 초과!');
+			setShowRestartBtn(true);
+			return;
+		}
+	}, [count]);
+
   return (
     <Wrapper>
 			<GameView>
 				<GameCounts>
-					{
-						[...Array(MAX_COUNT)].map(() => {
-							return <Count>
+					{[...Array(MAX_COUNT)].map((e, i) => {
+							return <Count className={i < count ? "filled": ""}>
 								<svg data-slot="icon" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 									<path d="M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z"></path>
 								</svg>
 							</Count>
-						})
-					}
+						})}
 				</GameCounts>
 
 				<Hangman>
