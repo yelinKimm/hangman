@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {v4 as uuidv4} from 'uuid';
 import _ from 'lodash';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -81,6 +81,47 @@ const Alphabet = styled.button`
 	&:disabled {
 		background-color: #fff;
 		cursor: not-allowed;
+	}
+`;
+
+const GameOverContainer = styled.div`
+	background-color: rgba(0,0,0,0.6);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left:	0;
+	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`;
+
+const GameOverModal = styled.div`
+	display: grid;
+	width: 300px;
+	height: 120px;
+	padding: 20px;
+	border-radius: 20px;
+	background-color: #fff;
+`;
+
+const GameOverTitle = styled.h2`
+	text-align: center;
+`;
+
+const RestartBtn = styled.button`
+	padding: 0 20px;
+	font-size: 17px;
+	border-radius: 10px;
+	border: none;
+	cursor: pointer;
+
+	> a {
+		color: #000;
+		text-decoration: none;
+	}
+	&:hover {
+		opacity: 0.7;
 	}
 `;
 
@@ -229,10 +270,18 @@ export default function GuessWord() {
 				})}
 			</Alphabets>
 
-			{showRestartBtn && (
-				<button>
- 					<NavLink to="/">Restart</NavLink>
-				</button>
+			{true && (
+				<GameOverContainer>
+					<GameOverModal>
+						<GameOverTitle>
+							Game Over
+						</GameOverTitle>
+
+						<RestartBtn>
+							<NavLink to="/">Restart</NavLink>
+						</RestartBtn>
+					</GameOverModal>
+				</GameOverContainer>
 			)}
 		</Wrapper>
   )
