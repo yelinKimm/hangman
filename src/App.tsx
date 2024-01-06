@@ -1,4 +1,3 @@
-import './App.css';
 import SelectWord from './components/Categories/SelectWord';
 
 function App() {
