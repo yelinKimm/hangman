@@ -19,7 +19,10 @@ const router = createBrowserRouter([
     path: "/guess",
     element:  <GuessWord />,
   }
-]);
+], {
+  basename: process.env.PUBLIC_URL
+}
+);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
