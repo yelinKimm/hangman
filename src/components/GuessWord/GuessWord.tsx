@@ -270,7 +270,7 @@ export default function GuessWord() {
 				})}
 			</Alphabets>
 
-			{true && (
+			{showRestartBtn && (
 				<GameOverContainer>
 					<GameOverModal>
 						<GameOverTitle>
