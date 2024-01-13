@@ -20,7 +20,7 @@ const router = createBrowserRouter([
     element:  <GuessWord />,
   }
 ], {
-  basename: process.env.PUBLIC_URL
+  // basename: import.meta.env.PUBLIC_URL
 }
 );
 
