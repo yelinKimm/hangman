@@ -19,9 +19,9 @@ const router = createBrowserRouter([
     path: "/guess",
     element:  <GuessWord />,
   }
-], {
-  // basename: import.meta.env.PUBLIC_URL
-}
+  ], {
+    basename: import.meta.env.DEV ? '/' : '/hangman/'
+  }
 );
 
 const root = ReactDOM.createRoot(

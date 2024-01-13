@@ -37,7 +37,7 @@
     "preview": "vite preview",
     "test": "vite test",
     "eject": "vite eject",
-    "predeploy": "yarn run build",
+    "predeploy": "yarn run build && cp ./dist/index.html ./dist/404.html",
     "deploy": "gh-pages -d dist",
     "dev": "vite"
   },
