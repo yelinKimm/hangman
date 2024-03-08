@@ -241,10 +241,13 @@ export default function GuessWord() {
 				</GameCounts>
 
 				<Hangman>
-					<HangmanImg src={`/hangman/step${count}.png`}></HangmanImg>
+					<HangmanImg src={`/step${count}.png`}></HangmanImg>
 				</Hangman>
 			</GameView>
 
+				<img src="/step0.png"/>
+				<img src="/hangman/step0.png"/>
+				<img src="/logo192.png"/>
 			<TargetWordsContainer>
 				{
 					characters?.map((characterItem: TargetWords) => {
