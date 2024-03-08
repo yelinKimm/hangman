@@ -8,7 +8,8 @@ const env = loadEnv(
 );
 
 export default defineConfig({
-    base: env.DEV ? env.DEV : '/',
+    // base: env.DEV ? env.DEV : '/hangman',
+    base: process.env.NODE_ENV === 'production' ? '/hangman/' : './',
     plugins: [react(), viteTsconfigPaths()],
     server: {    
       open: true,
