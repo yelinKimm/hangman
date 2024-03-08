@@ -241,7 +241,7 @@ export default function GuessWord() {
 				</GameCounts>
 
 				<Hangman>
-					<HangmanImg src={`/step${count}.png`}></HangmanImg>
+					<HangmanImg src={`/assets/step${count}.png`}></HangmanImg>
 				</Hangman>
 			</GameView>
 
