@@ -6,9 +6,12 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from 'react-query';
 import GuessWord from './components/GuessWord/GuessWord';
 
 import '@fontsource/roboto/400.css';
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -29,6 +32,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>
 );

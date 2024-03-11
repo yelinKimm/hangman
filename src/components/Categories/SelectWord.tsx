@@ -1,7 +1,9 @@
-import axios, { AxiosResponse } from 'axios';
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useQuery } from "react-query";
+import { getRandomWords } from '../../api';
+
+const WORD_COUNT = 5;
 
 const Wrapper = styled.div`
   position: absolute;
@@ -53,37 +55,8 @@ const WordItem = styled.li`
 
 // ----------------------------- //
 
-let mountCount = 1
-
-const BASE_URL = 'https://random-word-api.herokuapp.com/word';
-
 export default function SelectWord() {
-  const [didMount, setDidMount] = useState(false)
-  const [words, setWords] = useState<string[]>([]);
-
-  const getRandomWords = async (number: number) => {
-    try {
-      const response: AxiosResponse = await axios.get(`${BASE_URL}?number=${number}`);
-
-      const randomWords = response.data;
-      if (randomWords) {
-        setWords(randomWords);
-      }
-    } catch (error) {
-      console.log('[SelectWord/getRandomWords] get words failed. error=', error)
-    }
-  };
-
-  useEffect(() => {
-    mountCount++;
-    setDidMount(true)
-  }, []);
-
-  useEffect(() => {
-    if (didMount) {
-      getRandomWords(5);
-    }
-  }, [didMount]);
+  const { isLoading, data: wordList } = useQuery("randomWords", () => getRandomWords(WORD_COUNT));
 
   return (
     <Wrapper className='select-word-container'>
@@ -92,21 +65,27 @@ export default function SelectWord() {
         <SubTitle>Pick a word!</SubTitle>
       </TitleWrapper>
 
-      <WordList>
-        {words?.map((word: string, index: number) => {
-          return (
-            <WordItem className={index % 2 === 0 ? 'even' : 'odd'}>
-              <Link 
-                key={word} 
-                to="/guess" 
-                state={{ currentWord: word }} 
-                className='word'>
-                  {word}
-              </Link>
-            </WordItem>
-          );
-        })}
-      </WordList>
+      {
+        isLoading ? 
+        "Loading..." : 
+        (
+          <WordList>
+            {wordList?.map((word: string, index: number) => {
+              return (
+                <WordItem className={index % 2 === 0 ? 'even' : 'odd'}>
+                  <Link 
+                    key={word} 
+                    to="/guess" 
+                    state={{ currentWord: word }} 
+                    className='word'>
+                      {word}
+                  </Link>
+                </WordItem>
+              );
+            })}
+          </WordList>
+        )
+      }
     </Wrapper>
   )
 }
