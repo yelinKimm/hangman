@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 
 const GameView = styled.div`
 	display: grid;
-	grid-template-columns: 1fr 3fr;
+	grid-template-columns: 1.2fr 3fr;
 	gap: 40px;
 `;
 const GameCounts = styled.div`
@@ -33,6 +33,8 @@ const Count = styled.span`
 const Hangman = styled.div`
 	display: flex;
 	justify-content: center;
+	border-radius: 10px;
+	overflow: hidden;
 `;
 const HangmanImg = styled.img`
 	width: 100%;
@@ -97,7 +99,9 @@ const GameOverContainer = styled.div`
 `;
 
 const GameOverModal = styled.div`
-	display: grid;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	width: 300px;
 	height: 120px;
 	padding: 20px;
@@ -110,13 +114,16 @@ const GameOverTitle = styled.h2`
 `;
 
 const RestartBtn = styled.button`
-	padding: 0 20px;
+	height: 55px;
 	font-size: 17px;
 	border-radius: 10px;
 	border: none;
 	cursor: pointer;
 
 	> a {
+		display: block;
+		padding: 0 20px;
+		line-height: 55px;
 		color: #000;
 		text-decoration: none;
 	}
@@ -221,7 +228,6 @@ export default function GuessWord() {
 
 	useEffect(() => {
 		if (count >= MAX_COUNT) {
-			alert('기회 초과!');
 			setShowRestartBtn(true);
 			return;
 		}
@@ -232,7 +238,7 @@ export default function GuessWord() {
 			<GameView>
 				<GameCounts>
 					{[...Array(MAX_COUNT)].map((e, i) => {
-							return <Count className={i < count ? "filled": ""}>
+							return <Count className={i < count ? "filled": ""} key={i}>
 								<svg data-slot="icon" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 									<path d="M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z"></path>
 								</svg>

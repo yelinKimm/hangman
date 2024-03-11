@@ -25,7 +25,6 @@ const WordList = styled.ul`
   gap: 20px;
 `;
 const WordItem = styled.li`
-  padding: 20px 24px;
   font-weight: bold;
   font-size: 20px;
   outline: 3px solid #F7F6E8;
@@ -48,9 +47,30 @@ const WordItem = styled.li`
   }
 
   > a {
+    display: block;
+    padding: 20px 24px;
     color: #000;
     text-decoration: none;
   }
+`;
+const Spinner = styled.div`
+  width: 25px;
+  height: 25px;
+  border: 5px solid rgb(138, 121, 93, 0.3);
+  border-top-color: #8A795D;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spinner 0.8s linear infinite;
+
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
 `;
 
 // ----------------------------- //
@@ -67,12 +87,12 @@ export default function SelectWord() {
 
       {
         isLoading ? 
-        "Loading..." : 
+        <Spinner></Spinner> : 
         (
           <WordList>
             {wordList?.map((word: string, index: number) => {
               return (
-                <WordItem className={index % 2 === 0 ? 'even' : 'odd'}>
+                <WordItem className={index % 2 === 0 ? 'even' : 'odd'} key={word}>
                   <Link 
                     key={word} 
                     to="/guess" 
